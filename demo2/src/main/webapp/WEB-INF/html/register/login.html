@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Login</title>
+<link href="../resources/js/register/login.css" type="text/css"
+	rel="stylesheet">
+</head>
+<body>
+
+	<div class="login">
+		<div class="message">Task Manage System</div>
+		<div id="darkbannerwrap"></div>
+		<!--  1. form  -->
+		<form id="login-form" method="post" onsubmit="return false;">
+			<input id="username" name="username" placeholder="Username"
+				type="text" autocomplete="off">
+			<hr class="hr15">
+			<input id="password" name="password" placeholder="Password"
+				type="password" autocomplete="off">
+			<hr class="hr15">
+			<button style="width: 100%;" type="submit" onclick="login(this)">Login</button>
+			<hr class="hr20">
+			<span id="info" style="color: red"></span>
+		</form>
+	</div>
+
+</body>
+<!-- jquery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+	if (top != self) {
+		parent.location.href = '/demo2/registeradmin/login.html';
+	}
+	/* get data from database and test name and password */ 
+	function login(obj) {
+		var username = $.trim($('#username').val());
+		var password = $.trim($('#password').val());
+		if (username == "" || password == "") {
+			$("#info").html('username and password not null');
+			$(obj).attr("disabled", false);
+		} else {
+			$.ajax({
+				type : 'get',
+				url : '/demo2/superadmin/listlogin',
+				success : function(data) {
+					for (var i = 0; i < data.total; i++) {
+						if (data.rows[i].loginName == username
+								&& data.rows[i].loginPassword == password) {
+							location.href = '/demo2/registeradmin/index.html';
+							break;
+						}
+					}
+					if (i == data.total) {
+						alert("password or username is not correst");
+					}
+
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					var msg = xhr.responseText;
+					var response = JSON.parse(msg);
+					$("#info").html(response.message);
+					$(obj).attr("disabled", false);
+				}
+			});
+
+		}
+	}
+	
+</script>
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.todolist.demo.dao.LoginDao">
+    <select id="queryLogin" resultType="com.todolist.demo.entity.Login">
+		SELECT login_id, login_name, login_password
+		FROM tb_todologin
+	</select>
+    <select id="queryLoginById" resultType="com.todolist.demo.entity.Login">
+		SELECT login_id, login_name, login_password
+		FROM tb_todologin
+		WHERE
+		login_id=#{loginId}
+	</select>
+
+	<select id="queryLoginByName" resultType="com.todolist.demo.entity.Login">
+		SELECT login_id, login_name, login_password
+		FROM tb_todologin
+		WHERE
+		login_name=#{loginName}
+	</select>
+
+    <insert id="insertLogin" useGeneratedKeys="true" keyProperty="loginId"
+            keyColumn="login_id" parameterType="com.todolist.demo.entity.Login">
+		INSERT INTO
+		tb_todologin(login_name,login_password)
+		VALUES
+		(#{loginName},#{loginPassword})
+	</insert>
+	
+    <update id="updateLogin" parameterType="com.todolist.demo.entity.Login">
+        update tb_todologin
+        <set>
+            <if test="loginName != null">login_name=#{loginName},</if>
+            <if test="loginPassword != null">login_password=#{loginPassword}</if>
+        </set>
+        WHERE
+		login_id=#{loginId}
+    </update>
+    
+    <delete id="deleteLogin">
+		DELETE FROM
+		tb_todologin
+		WHERE
+		login_id =
+		#{loginId}
+	</delete>
+</mapper>

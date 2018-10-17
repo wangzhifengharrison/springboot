@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<form class="form-horizontal" onsubmit="return false" id="form">
+			<fieldset>
+				<input type="hidden" id="id" name="id">
+
+				<div class="form-group">
+					<label class="col-md-2 control-label">Task name</label>
+					<div class="col-md-10">
+						<input class="form-control" placeholder="Task name" type="text"
+							name="name" id="taskname" data-bv-notempty="true"
+							data-bv-notempty-message="Task name not null">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-2 control-label">Project code</label>
+					<div class="col-md-10">
+						<input class="form-control" placeholder="Project code" type="text"
+							name="name" id="projectcode" data-bv-notempty="true"
+							data-bv-notempty-message="Project code not null">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-2 control-label">Task description</label>
+					<div class="col-md-10">
+						<input class="form-control" placeholder="Task description"
+							type="text" name="name" id="taskdescription"
+							data-bv-notempty="true"
+							data-bv-notempty-message="Task description not null">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-2 control-label">Task due date</label>
+					<div class="col-md-10">
+						<input class="form-control" placeholder="Task due date"
+							type="date" name="name" id="taskduedate" data-bv-notempty="true"
+							data-bv-notempty-message="Task due date not null">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-2 control-label">Task create date</label>
+					<div class="col-md-10">
+						<input class="form-control" placeholder="Task create date"
+							type="date" name="name" id="taskcreatedate"
+							data-bv-notempty="true"
+							data-bv-notempty-message="Task create date not null">
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<div class="row" align="center">
+						<div class="col-md-12">
+							<button class="btn btn-primary" onclick="windowclose()">Cancel</button>
+							<button class="btn btn-primary" type="submit" onclick="addtask()">
+								<i class="fa fa-save"></i> Submit
+							</button>
+						</div>
+					</div>
+				</div>
+				
+				<div id ="info" color="red"><div/>
+
+			</fieldset>
+		</form>
+	</div>
+	<!-- jquery -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		/* cancel button in taskedit */
+		function windowclose() {
+			window.close();
+			window.opener.location.reload();
+		}
+		/* add task in task table */
+		function addtask() {
+			var taskname = $.trim($('#taskname').val());
+			var projectcode = $.trim($('#projectcode').val());
+			var taskdescription = $.trim($('#taskdescription').val());
+			var taskduedate = $.trim($('#taskduedate').val());
+			var taskcreatedate = $.trim($('#taskcreatedate').val());
+			/* form a json object */
+			var formData = {
+				taskName : taskname,
+				projectCode : projectcode,
+				taskDescription : taskdescription,
+				taskDuedate : $("#taskduedate").val(),
+				taskCreatedate : $("#taskcreatedate").val()	
+			}
+			/* post data to database */
+			if (taskname == "" || projectcode == "") {
+			$("#info").html("Task name and project code can't be null ");
+			$(obj).attr("disabled", false);
+		} else {
+			$.ajax({
+				type : 'post',
+				data : JSON.stringify(formData),
+				contentType : "application/json",
+				dataType : 'json',
+				async : false,
+				url : '/demo2/superadmin/addtask',
+				success : function(data) {
+					/* modify success */
+					alert("success to save");
+					window.close();
+					/* update data in index.html */
+					window.opener.location.reload();
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					var msg = xhr.responseText;
+					var response = JSON.parse(msg);
+					$("#info").html(response.message);
+					$(obj).attr("disabled", false);
+				}
+			});
+		}
+		}
+	</script>
+</body>
+</html>
